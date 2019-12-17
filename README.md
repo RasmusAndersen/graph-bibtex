@@ -1,3 +1,7 @@
+# graph-bibtex
+
+Initially cloned from [here](https://github.com/jdmorise/graph_coaut_bibtex)
+
 # graph_coaut_bibtex
 Graph Display Software for Author Relationships with Bibtex Files   
 (c) 2015-2019 JD Morise   
