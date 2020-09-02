@@ -116,7 +116,7 @@ def BuildSemanticGraph(args):
 
     with open(args.input_filename) as bibtex_file:
         bib_database = bibtexparser.load(bibtex_file, parser=MyParser)
-    S = Semantic(bib_database)
+    S = Semantic(bib_database, args.topics)
     G = SemanticGraph()
     G.add_tags_nodes(S)
     G.add_paper_nodes(S)
@@ -144,6 +144,7 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--before', type=int, default=2050, help='Only use Publications before YEAR for the graph')
     parser.add_argument('-a', '--after', type=int, default=1900, help='Only use Publications after YEAR for the graph')
     parser.add_argument('-t', '--type', default='author', help='Build either semantic or author relation graph')
+    parser.add_argument('-o', '--topics', default=None, nargs='+', help='Select the semantic topics to use (case insensitive)')
 
     parser.add_argument('-gp', '--graph_programm', default='fdp', help="""Graph Programm for rendering the graph. one of the following: fdp,dot,sfdp,circo,twopi.""")
 
