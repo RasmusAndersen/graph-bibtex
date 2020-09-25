@@ -40,10 +40,22 @@ from authors import Authors, AuthorsGraph
 from semantics import Semantic, SemanticGraph
 
 
+def SanitizeBibliography(bib):
+    entries_to_remove = [articles for articles in bib.entries if 'author' not in articles.keys() or 'year' not in articles.keys()]
+    bib.entries = [articles for articles in bib.entries if 'author' in articles.keys() and 'year' in articles.keys()]
+
+    print('\033[93mWarning:\033[0m the following key entries did not have an author and will be removed:')
+    for key in entries_to_remove:
+        print('\t\033[94m{}\033[0m'.format(key['ID']))
+        bib.entries_dict.pop(key['ID'], None)
+
+    return bib
+
+
 def BuildAuthorGraph(args):
     G = AuthorsGraph()
 
-    print("""A Graph Display Software for bibtex databases
+    """A Graph Display Software for bibtex databases
     Copyright (C) 2015 JD Morise, jdmorise a t yahoo.com
     
     This program is free software: you can redistribute it and/or modify
@@ -59,7 +71,7 @@ def BuildAuthorGraph(args):
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. 
     
-    """)
+    """
 
     # thresholds
     G.edge_rel_thr = args.edge_relation_thres
@@ -74,9 +86,9 @@ def BuildAuthorGraph(args):
 
     with open(args.input_filename) as bibtex_file:
         bib_database = bibtexparser.load(bibtex_file, parser=MyParser)
+        bib_database = SanitizeBibliography(bib_database)
 
     # construct array of authors
-    #
 
     main_author_name = args.main_author_name.split(' ')
 
@@ -87,7 +99,7 @@ def BuildAuthorGraph(args):
 
     MyAuthors.create_author_list(bib_database)
 
-    # construct array of relationsships
+    # construct array of relationships
     MyAuthors.create_relations(bib_database)
 
     # Add Nodes to Graph
@@ -116,6 +128,8 @@ def BuildSemanticGraph(args):
 
     with open(args.input_filename) as bibtex_file:
         bib_database = bibtexparser.load(bibtex_file, parser=MyParser)
+        bib_database = SanitizeBibliography(bib_database)
+
     S = Semantic(bib_database, args.topics)
     G = SemanticGraph()
     G.add_tags_nodes(S)
