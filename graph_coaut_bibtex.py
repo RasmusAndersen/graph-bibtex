@@ -44,10 +44,11 @@ def SanitizeBibliography(bib):
     entries_to_remove = [articles for articles in bib.entries if 'author' not in articles.keys() or 'year' not in articles.keys()]
     bib.entries = [articles for articles in bib.entries if 'author' in articles.keys() and 'year' in articles.keys()]
 
-    print('\033[93mWarning:\033[0m the following key entries did not have an author and will be removed:')
-    for key in entries_to_remove:
-        print('\t\033[94m{}\033[0m'.format(key['ID']))
-        bib.entries_dict.pop(key['ID'], None)
+    if entries_to_remove:
+        print('\033[93mWarning:\033[0m the following key entries did not have an author and will be removed:')
+        for key in entries_to_remove:
+            print('\t\033[94m{}\033[0m'.format(key['ID']))
+            bib.entries_dict.pop(key['ID'], None)
 
     return bib
 
@@ -132,6 +133,13 @@ def BuildSemanticGraph(args):
 
     S = Semantic(bib_database, args.topics)
     G = SemanticGraph()
+
+    # thresholds
+    G.edge_rel_thr = args.edge_relation_thres
+    G.aut_rel_thr = args.author_relation_thres
+    G.aut_pub_thr = args.author_publication_thres
+    G.level = args.level
+
     G.add_tags_nodes(S)
     G.add_paper_nodes(S)
     G.add_paper_edges(S)

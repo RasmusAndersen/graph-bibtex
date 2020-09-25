@@ -156,24 +156,17 @@ class AuthorsGraph(pgv.AGraph):
 
                 self.add_node(idx, label=graph_label)
                 self.node_attr.update(style='filled', color=self.node_outline_color, penwidth=3, fillcolor=self.node_fill_color, fontcolor=self.node_font_color)
-                # print This_Authors.list_of_authors[idx]['surname'] + ' ' + This_Authors.list_of_authors[idx]['firstname'] + ' ' + str(This_Authors.list_of_authors[idx]['level'])
 
-    # ------------------------------------------------------------------------------------------------
     def add_author_edges(self, This_Authors):
-        print('Add Edges to Graph')
         print('Add Edges to Graph')
         for rel in This_Authors.list_of_relations:
             if rel[2] >= self.edge_rel_thr and self.has_node(rel[0]) and self.has_node(rel[1]):
                 rel_width = float(rel[2]) / This_Authors.rel_max * 4 + 1
                 self.add_edge(rel[0], rel[1], label=rel[2], weigth=rel[2], dir='none', penwidth=rel_width, color=self.edge_color)
 
-    # ------------------------------------------------------------------------------------------------
     def remove_author_nodes(self):
 
         print('Compact Graph')
         remove = [node for node in self.nodes() if self.degree(node) < self.aut_rel_thr]
         self.remove_nodes_from(remove)
-        print('Remaining Nodes: ' + str(self.number_of_nodes()))
         print('Remaining Edges: ' + str(self.number_of_edges()))
-
-# ------------------------------------------------------------------------------------------------
